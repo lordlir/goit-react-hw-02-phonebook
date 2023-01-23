@@ -27,7 +27,6 @@ export class App extends Component {
     const searchSameName = this.state.contacts.find(
       contact => contact.name === name
     );
-    console.log(searchSameName);
     if (searchSameName) {
       alert(`${name} is already in contacts`);
     } else {
