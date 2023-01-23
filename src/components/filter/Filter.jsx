@@ -1,8 +1,11 @@
+import PropTypes from 'prop-types';
+import s from './filter.module.css';
 export const Filter = ({ filter, onFilterChanche }) => {
   return (
-    <label htmlFor="filter">
+    <label className={s.label} htmlFor="filter">
       Find contacts by name
       <input
+        className={s.input}
         type="text"
         name="filter"
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -13,4 +16,9 @@ export const Filter = ({ filter, onFilterChanche }) => {
       />
     </label>
   );
+};
+
+Filter.propType = {
+  filter: PropTypes.string.isRequired,
+  onFilterChanche: PropTypes.func.isRequired,
 };

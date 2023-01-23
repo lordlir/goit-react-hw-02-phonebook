@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+
 import { v4 as uuidv4 } from 'uuid';
-import ContactForm from './contact-form/ContactForm';
+
+import { ContactForm } from './contact-form/ContactForm';
 import { Filter } from './filter/Filter';
 import { ContactList } from './contact-list/ContactList';
+
+import s from './app.module.css';
+
 export class App extends Component {
   state = {
     contacts: [
@@ -66,14 +71,14 @@ export class App extends Component {
       <div
         style={{
           height: '100vh',
-
+          paddingTop: 50,
           fontSize: 40,
           color: '#010101',
         }}
       >
-        <h2>Phonebook</h2>
+        <h2 className={s.title}>Phonebook</h2>
         <ContactForm onAddContact={this.addContact} />
-        <h2>Contact</h2>
+        <h2 className={s.title}>Contact</h2>
         <Filter filter={filter} onFilterChanche={this.handleChange} />
         <ContactList
           contactsFiltred={contactsFiltred}

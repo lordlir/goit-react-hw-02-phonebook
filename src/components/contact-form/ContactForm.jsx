@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-// import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
+
+import s from './contact-form.module.css';
 
 export class ContactForm extends Component {
   state = {
@@ -24,10 +26,11 @@ export class ContactForm extends Component {
 
   render() {
     return (
-      <form className="form" onSubmit={this.handleSubmit}>
-        <label htmlFor="name">
+      <form className={s.form} onSubmit={this.handleSubmit}>
+        <label className={s.label} htmlFor="name">
           Name
           <input
+            className={s.input}
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -37,9 +40,10 @@ export class ContactForm extends Component {
             onChange={this.handleChange}
           />
         </label>
-        <label htmlFor="name">
+        <label className={s.label} htmlFor="name">
           Number
           <input
+            className={s.input}
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -49,10 +53,14 @@ export class ContactForm extends Component {
             onChange={this.handleChange}
           />
         </label>
-        <button type="submit">Add contact</button>
+        <button className={s.btn} type="submit">
+          Add contact
+        </button>
       </form>
     );
   }
 }
 
-export default ContactForm;
+ContactForm.propType = {
+  onAddContact: PropTypes.func.isRequired,
+};
