@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-
+import ContactForm from './contact-form/ContactForm';
+import { Filter } from './filter/Filter';
+import { ContactList } from './contact-list/ContactList';
 export class App extends Component {
   state = {
     contacts: [
@@ -9,8 +11,7 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
-    number: '',
+
     filter: '',
   };
 
@@ -22,108 +23,63 @@ export class App extends Component {
     });
   };
 
-  handleSubmit = evt => {
-    evt.preventDefault();
-    this.setState(prevState => ({
-      contacts: [
-        ...prevState.contacts,
-        {
-          id: uuidv4(),
-          name: this.state.name,
-          number: this.state.number,
-        },
-      ],
-    }));
-    this.setState({ name: '', number: '' });
+  addContact = (name, number) => {
+    const searchSameName = this.state.contacts.find(
+      contact => contact.name === name
+    );
+    console.log(searchSameName);
+    if (searchSameName) {
+      alert(`${name} is already in contacts`);
+    } else {
+      const contact = {
+        name,
+        number,
+        id: uuidv4(),
+      };
+
+      this.setState(prevState => ({
+        contacts: [...prevState.contacts, contact],
+      }));
+    }
   };
 
-  getNameBySearch = e => {
-    const { contacts, filter } = this.state;
-    // console.log(contacts);
-    // return contacts.filter(contact => {
-    //   contact.name.toLowerCase().includes(filter.toLowerCase());
-    // });
-
-    const { name, value } = e.target;
-    console.log(value);
-    this.setState({
-      [name]: value,
+  getVisibleContacts = () => {
+    const { filter, contacts } = this.state;
+    if (filter === '') {
+      return contacts;
+    }
+    return contacts.filter(contact => {
+      return contact.name.toLowerCase().includes(filter.toLowerCase());
     });
-    //
   };
 
-  // addContact = () => {
-  //   this.setState(prevState => ({
-  //     contacts: [...prevState.contacts, contact],
-  //   }));
-  // };
-  // this.setState.contacts.push({ handleChange });
-  // };
+  deleteContacts = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
 
   render() {
+    const contactsFiltred = this.getVisibleContacts();
+    const { filter } = this.state;
+
     return (
       <div
         style={{
           height: '100vh',
-          // display: 'flex',
-          // justifyContent: 'center',
-          // alignItems: 'center',
+
           fontSize: 40,
           color: '#010101',
         }}
       >
         <h2>Phonebook</h2>
-        <form className="form" onSubmit={this.handleSubmit}>
-          <label htmlFor="name">
-            Name
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label htmlFor="name">
-            Number
-            <input
-              type="tel"
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-              required
-              value={this.state.number}
-              onChange={this.handleChange}
-            />
-          </label>
-          <button type="submit">Add contact</button>
-        </form>
+        <ContactForm onAddContact={this.addContact} />
         <h2>Contact</h2>
-        <label htmlFor="filter">
-          Find contacts by name
-          <input
-            type="text"
-            name="filter"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            value={this.state.filter}
-            onChange={this.getNameBySearch}
-          />
-        </label>
-
-        <ul className="list">
-          {this.state.contacts.map(({ name, number, id }) => {
-            return (
-              <li className="list-item" key={id}>
-                {name}
-                {number}
-              </li>
-            );
-          })}
-        </ul>
+        <Filter filter={filter} onFilterChanche={this.handleChange} />
+        <ContactList
+          contactsFiltred={contactsFiltred}
+          onDelContact={this.deleteContacts}
+        />
       </div>
     );
   }
